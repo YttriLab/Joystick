@@ -1,2 +1,3 @@
 # Joystick
-![Example Mouse Reaches with Processing](JSgif.gif)
+
+![Example Mouse Reaches with Processing](Demo/JSgif.gif)
