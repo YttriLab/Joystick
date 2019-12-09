@@ -14,10 +14,16 @@ function [] = JSAnalysis(MouseName)
 % hline - https://www.mathworks.com/matlabcentral/fileexchange/1039-hline-and-vline
 % vline - https://www.mathworks.com/matlabcentral/fileexchange/1039-hline-and-vline
 % numSubplots - https://www.mathworks.com/matlabcentral/fileexchange/26310-numsubplots-neatly-arrange-subplots
-% `
+% 
 
 
 % Datebase should be changed to local directory where data will be saved change base directory to where the data can be found
+
+%JSAnalysis(MouseName)
+%
+% MouseName - char array of mouse name (ex, 'A1')
+% JSAnalysis('A1')
+%
 %
 % MAN, mnichola@andrew.cmu.edu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,7 +34,7 @@ Database = 'C:\Users\yttri-lab\Documents\MATLAB\JS2'; %change to location where 
 
 %change below basen variables to any location that your data is saved:
 base1 = 'N:\yttri-lab\Data Transfer\241_SDData'; 
-base2 = 'N:\yttri-lab\Data Transfer\239a_SDData';
+base2 = 'N:\yttri-lab\Data Transfer\239a_SDData'; % if only one location this variable can be removed or use "base2 = ''";
 
 Bases = {base1 base2}; 
 %to add more locations make new "basen" variables (location of data) and append to the above line as the following Bases = {base1 base2 basen}; 
@@ -44,6 +50,10 @@ files = FF;
 
 %%
 %rename files
+%
+% This renaming section is based our naming convention of [Letter Number]
+% may need to change according to your naming convention
+%
 filenames = cell(size(files,1),1);
 for i = 1:size(files,1)
     if files{i,4} ~= 0
@@ -109,7 +119,7 @@ hands = zeros(nfiles,1);
 for i = 1:nfiles
     F = figure; %session summary figure
     filepth = [destination filesep FILES{i,1}];
-    DATA(sz+i,1:4) = getJS2(filepth); %[tlt Date endtime data]; - - - can use csvread if you have no issues with your csv files
+    DATA(sz+i,1:4) = getJS(filepth); %[tlt Date endtime data]; - - - can use csvread if you have no issues with your csv files
     %data =  [time EM TrialCt X Y pos baseX baseY SolOpenDuration DelaytoRew ITI Threshold]
     data = DATA{i+sz,4}; ct = 2; threshold = data(end,12); nTrials = data(end,3);
     
