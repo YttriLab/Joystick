@@ -6,6 +6,31 @@ function [nd] = unDecimate(data, columnsWanted)
 % currently takes one column at a time
 % can run a for loop to go through matrix on outside - see below
 
+% [nd] = unDecimate(data, columnsWanted)
+% Input: 
+%   data............matrix from which data will be undicimated with first column being time
+%   columnsWanted...what column you want to undecimate
+
+% Output:
+%   nd..............2 column matrix of undecimated time and undecimated data
+
+
+% example for running unDecimate through columns of matrix
+% tic
+% data = DATA{9,4};ct = 2;
+% for i = [2 6] %columns from matrix data wanted
+%     nd = unDecimate(data,i);
+%     if i == 2
+%         D = zeros(size(nd,1),3); 
+%         D(:,1:2) = nd;
+%     else
+%         D(:,ct) = nd(:,2);
+%     end
+%     ct = ct+1;
+% end
+% toc
+
+
 %071318 - MAN
 %%
 
@@ -44,19 +69,3 @@ nd(end,:) = [data(end,1) data(end,j)];
 % plot(data(:,1),data(:,6),'k')
 % legend({'interpolated data', 'old data points', 'trace from old data points'})
 
-%%
-% example for running unDecimate through matrix
-
-% tic
-% data = DATA{9,4};ct = 2;
-% for i = [2 6]
-%     nd = unDecimate(data,i);
-%     if i == 2
-%         D = zeros(size(nd,1),3);
-%         D(:,1:2) = nd;
-%     else
-%         D(:,ct) = nd(:,2);
-%     end
-%     ct = ct+1;
-% end
-% toc
