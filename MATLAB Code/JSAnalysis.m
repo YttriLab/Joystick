@@ -106,7 +106,7 @@ for i = 1:nfiles
             f = [base filesep FILES{i}];
             copyfile(f,destination)
         end
-        fprintf('\nSaved %s to Local Computer.\n\n',FILES{i,1});
+        fprintf('\nSaved %s to %s.\n\n',FILES{i,1}, getenv('COMPUTERNAME'));  %getenv('COMPUTERNAME') may not work for linux/MAC...
     else
         fprintf('\n\n%s is %d KB and was deleted.\n\n', FILES{i,1}, FILES{i,4})
         delete(f)
