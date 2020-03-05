@@ -81,7 +81,7 @@ end
 D = [destination filesep [MouseName '_DATA.mat']];
 
 if exist(D,'file')
-    load(D,'file')
+    load(D)
     sz = size(DATA,1); %how many current sessions are saved in DATA
     FILES = files(~contains(files(:,1),DATA(:,1)),:);
     nfiles = size(FILES,1);
