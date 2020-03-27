@@ -6,7 +6,7 @@ function [] = JSAnalysis(MouseName)
 % After calling this function the first time, it will find any new data that has been saved using SavemicroSDData.m and append it to the MouseName_DATA.mat file.
 % 
 % This funtion requires the following funtions
-% getJS2.m
+% getJS.m
 % unDecimate.m
 % getReachTimes.m
 %     moveavg.m -  M. in S. Carlos Adrián Vargas Aguilera, nubeobscura@hotmail.com
