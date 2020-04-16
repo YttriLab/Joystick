@@ -4,7 +4,7 @@ function [] = JSAnalysis(MouseName)
 % This function takes in mouse name as the primary argument and will find data saved using SavemicroSDData.m
 % This funtion will generate a MouseName_DATA.mat file (cell) with each row being a session and each column being a type of data for that session.
 % After calling this function the first time, it will find any new data that has been saved using SavemicroSDData.m and append it to the MouseName_DATA.mat file.
-% 
+%
 % This funtion requires the following funtions
 % getJS.m
 % unDecimate.m
@@ -14,7 +14,7 @@ function [] = JSAnalysis(MouseName)
 % hline - https://www.mathworks.com/matlabcentral/fileexchange/1039-hline-and-vline
 % vline - https://www.mathworks.com/matlabcentral/fileexchange/1039-hline-and-vline
 % numSubplots - https://www.mathworks.com/matlabcentral/fileexchange/26310-numsubplots-neatly-arrange-subplots
-% 
+%
 
 
 % Datebase should be changed to local directory where data will be saved change base directory to where the data can be found
@@ -30,21 +30,21 @@ function [] = JSAnalysis(MouseName)
 %%
 
 %find files
-Database = 'C:\Users\yttri-lab\Documents\MATLAB\JS2'; %change to location where your data will be saved
+Database = 'C:\Users\Yttri-lab\Documents\MATLAB\JS2\Test'; %change to location where your data will be saved
 
 %change below basen variables to any location that your data is saved:
-base1 = 'N:\yttri-lab\Data Transfer\241_SDData'; 
-base2 = 'N:\yttri-lab\Data Transfer\239a_SDData'; % if only one location this variable can be removed or use "base2 = ''";
+base1 = 'M:\Data Transfer\241_SDData';
+base2 = 'M:\Data Transfer\239a_SDData'; % if only one location this variable can be removed or use "base2 = ''";
 
-Bases = {base1 base2}; 
-%to add more locations make new "basen" variables (location of data) and append to the above line as the following Bases = {base1 base2 basen}; 
+Bases = {base1 base2};
+%to add more locations make new "basen" variables (location of data) and append to the above line as the following Bases = {base1 base2 basen};
 
 FF={}; nbases = size(Bases,2);
 for i =1:nbases
     files = dir([Bases{i} filesep MouseName filesep '*csv']);
     Acell = struct2cell(files)';
     mn = Acell(contains(Acell(:,1), MouseName),:);
-    FF = [FF; mn  repmat({i},size(mn,1),1)]; %append location handle 
+    FF = [FF; mn  repmat({i},size(mn,1),1)]; %append location handle
 end
 files = FF;
 
@@ -122,36 +122,11 @@ for i = 1:nfiles
     DATA(sz+i,1:4) = getJS(filepth); %[tlt Date endtime data]; - - - can use csvread if you have no issues with your csv files
     %data =  [time EM TrialCt X Y pos baseX baseY SolOpenDuration DelaytoRew ITI Threshold]
     data = DATA{i+sz,4}; ct = 2; threshold = data(end,12); nTrials = data(end,3);
+    TrialCt = data(end,3); SessionTime = ceil((data(end,1)/1000)/60); DATA{sz+i,6} = TrialCt/SessionTime;
     
     %undecimate JS position
-%         Convert js sampling rate to 1 kHz
-    for j = [2 6] %column 2(eventmarker) and 6 (JS Position)
-        nd = unDecimate(data,j);
-        if j == 2
-            D = zeros(size(nd,1),3);
-            D(:,1:2) = nd;
-        else
-            D(:,ct) = nd(:,2);
-        end
-        ct = ct+1;
-    end
-    DATA{sz+i,5} = D;
-    TrialCt = data(end,3);
-    SessionTime = ceil((data(end,1)/1000)/60);
-    DATA{sz+i,6} = TrialCt/SessionTime;
-    
-    %plot JS trace
-    f = figure; plot(D(:,3))
-    hold on
-    plot(D(:,2)*25) %eventmarker (EM)
-    plot(repmat(threshold, size(D,1),1))
-    tlt = sprintf('%s\n%d trials in %d mins',filenames{i+sz}, TrialCt,SessionTime);
-    legend({'pos', 'EM', 'threshold'})
-    ylabel('Amplitude'); xlabel('Time (ms)');
-    title(tlt)
-    pth = [Database filesep MouseName filesep FILES{i,1}(1:end-4) '_trace.fig']; %location/name of figure
-    savefig(f,pth)
-    
+    %         Convert js sampling rate to 1 kHz
+    UndTimeEM = unDecimate(data,2);  %column 2(eventmarker)
     
     ct = 2;
     for j = [4 5] %undecimate X and Y
@@ -166,10 +141,26 @@ for i = 1:nfiles
     end
     DATA{sz+i,16} = D;
     
+    %calculate Euclidean distance for JS position and baseline subtract
+    %median value and rectify
+    X = D(:,2); Y = D(:,3); pos = sqrt((X.^2)+(Y.^2)); med = nanmedian(pos); blrec = abs(pos-med);
+    DATA{sz+i,5} = [UndTimeEM blrec];
+    
+    %plot JS trace
+    f = figure; plot(blrec)
+    hold on
+    plot(UndTimeEM(:,2)*25) %eventmarker (EM)
+    plot(repmat(threshold, size(D,1),1))
+    tlt = sprintf('%s\n%d trials in %d mins',filenames{i+sz}, TrialCt,SessionTime);
+    legend({'pos', 'EM', 'threshold'})
+    ylabel('Amplitude'); xlabel('Time (ms)');
+    title(tlt)
+    pth = [Database filesep MouseName filesep FILES{i,1}(1:end-4) '_trace.fig']; %location/name of figure
+    savefig(f,pth)
+    
     %%
     %get reach times
-    
-    data = DATA{i+sz,5};
+    data = DATA{sz+i,5};
     Date = DATA{i+sz,2};
     [reachStart, reachStop, reach0, pos1, pos2] = getReachTimes(data, MouseName, Date); %[reachstarttime reachstoptimes fullreachtrace ReachesAlignedtoStart ReachesAlignedtoStop]
     hold on;plot(data(~isnan(data(:,2)),2)*25)%add in event marker (EM)
@@ -183,7 +174,7 @@ for i = 1:nfiles
     for k = 1:size(reachStart,2)
         mn = reach0(reachStart(k):reachStart(k)+400);
         MD(k) = max(mn)-mn(1); %max dispalcement
-        PA(k) = max(mn);%peak amplitude        
+        PA(k) = max(mn);%peak amplitude
         %figure; plot((reach0(reachStart(k):reachStart(k)+400)))
     end
     DATA{sz+i,12} = MD; DATA{i+sz,13} = PA;
@@ -192,7 +183,7 @@ for i = 1:nfiles
     pre = 249; post = 1500;
     reaches_A = zeros(size(reachStart,2),1750);
     d = reach0;
-    figure(F); subplot(2,2,2); %plot all reaches and average on summary figure    
+    figure(F); subplot(2,2,2); %plot all reaches and average on summary figure
     for r = 1:size(reachStart,2)
         if reachStart(r)<pre
             reaches_A(r,:) = [nan(1,pre ) d(reachStart(r):reachStart(r) + post)'];
@@ -221,7 +212,7 @@ for i = 1:nfiles
     figure; %plot mean and sem reach
     plot(m); hold on
     fill(X, Y, 'b', 'facealpha', .25, 'edgealpha', .25, 'edgecolor', 'b'); hold on
-    hline(threshold) 
+    hline(threshold)
     vline(pre)
     
     %PVA - position velocity acceleration
@@ -346,7 +337,7 @@ for i = 1:nfiles
     pth = [Database filesep MouseName filesep mn];
     
     save(pth , 'DATA','-v7.3');
-    hands(i) = F; %add summary figure to hands variable 
+    hands(i) = F; %add summary figure to hands variable
 end
 %%
 %extra plotting
@@ -359,7 +350,7 @@ for j = 1:size(DATA,1)
     sesh = zeros(size(mn,1)-1,1);
     for k = 2:size(mn,1)
         ems = data(mn(k-1)+1:mn(k),2)==3;
-        [~,trials] = bwlabel(ems); 
+        [~,trials] = bwlabel(ems);
         sesh(k-1) = trials/5;
     end
     DATA{j,15} = sesh;
