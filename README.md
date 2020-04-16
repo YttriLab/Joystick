@@ -14,5 +14,7 @@ The above mouse is performing a self-paced center out joystick task for a fluid 
 </p>
 
 
-<p>This work has been published in eNuro in 2020.
-[Belsey et al 2020](https://www.eneuro.org/content/7/2/ENEURO.0523-19.2020).</p>
+<p style="text-align:center;">
+This work has been published in eNuro in 2020.
+[Belsey et al 2020](https://www.eneuro.org/content/7/2/ENEURO.0523-19.2020).
+</p>
