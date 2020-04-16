@@ -12,3 +12,7 @@ The above mouse is performing a self-paced center out joystick task for a fluid 
 <p>EventMarker 3 : intertrial interval.</p>
 <p>Real time joystick position and threshold as well as task performance and parameters can be visualized using a Java based Processing sketch (above left). 
 </p>
+
+
+This work has been published in eNuro in 2020.
+[Belsey et al 2020](https://www.eneuro.org/content/7/2/ENEURO.0523-19.2020).
