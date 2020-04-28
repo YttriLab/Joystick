@@ -25,6 +25,8 @@ function [] = JSAnalysis(MouseName)
 % JSAnalysis('A1')
 %
 %
+%v2_1
+%042820
 % MAN, mnichola@andrew.cmu.edu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -87,12 +89,12 @@ if exist(D,'file')
     nfiles = size(FILES,1);
 else
     nfiles = size(filenames,1);
-    DATA = cell(nfiles,17);
+    DATA = cell(nfiles,18);
     FILES = files;
     sz = 0;
 end
 % DATA will be a nSessions row by 17 columns of data as below:
-% DATA = [1tlt Date endtime data 5undecimatedPos trialspermin reachStart reachStop reach0 10ReachAlighnedtoStart ReachAlighedtoStop maxdisplacement peakamplitude reachesaligned 15trialsper5min undecimatedXY 17rewardedReachTime]
+% DATA = [1tlt Date endtime data 5undecimatedPos trialspermin reachStart reachStop reach0 10ReachAlighnedtoStart ReachAlighedtoStop maxdisplacement peakamplitude reachesaligned 15trialsper5min undecimatedXY rewardedReachTime 18Baselinefix(trace badBLstartTimes index)]
 
 %%
 %move files
@@ -126,8 +128,19 @@ for i = 1:nfiles
     
     %undecimate JS position
     %         Convert js sampling rate to 1 kHz
-    UndTimeEM = unDecimate(data,2);  %column 2(eventmarker)
+    for j = [2 6] %column 2(eventmarker) and 6 (JS Position)
+        nd = unDecimate(data,j);
+        if j == 2
+            D = zeros(size(nd,1),3);
+            D(:,1:2) = nd;
+        else
+            D(:,ct) = nd(:,2);
+        end
+        ct = ct+1;
+    end
+    DATA{sz+i,5} = D;
     
+  
     ct = 2;
     for j = [4 5] %undecimate X and Y
         nd = unDecimate(data,j);
@@ -141,16 +154,15 @@ for i = 1:nfiles
     end
     DATA{sz+i,16} = D;
     
-    %calculate Euclidean distance for JS position and baseline subtract
-    %median value and rectify
-    X = D(:,2); Y = D(:,3); pos = sqrt((X.^2)+(Y.^2)); med = nanmedian(pos); blrec = abs(pos-med);
-    DATA{sz+i,5} = [UndTimeEM blrec];
+    %prep arduino trace to accound for unwanted changes in baseline
+    [data, badStarts, ind] = PrepArduinoTrace(DATA{sz+i,5},.9,8500);
+    DATA{sz+i,18} = {data, badStarts, ind};
     
     %plot JS trace
-    f = figure; plot(blrec)
+    f = figure; plot(data(:,3))
     hold on
-    plot(UndTimeEM(:,2)*25) %eventmarker (EM)
-    plot(repmat(threshold, size(D,1),1))
+    plot(data(:,2)*25) %eventmarker (EM)
+    plot(repmat(threshold, size(data,1),1))
     tlt = sprintf('%s\n%d trials in %d mins',filenames{i+sz}, TrialCt,SessionTime);
     legend({'pos', 'EM', 'threshold'})
     ylabel('Amplitude'); xlabel('Time (ms)');
@@ -158,9 +170,10 @@ for i = 1:nfiles
     pth = [Database filesep MouseName filesep FILES{i,1}(1:end-4) '_trace.fig']; %location/name of figure
     savefig(f,pth)
     
+    
     %%
     %get reach times
-    data = DATA{sz+i,5};
+    
     Date = DATA{i+sz,2};
     [reachStart, reachStop, reach0, pos1, pos2] = getReachTimes(data, MouseName, Date); %[reachstarttime reachstoptimes fullreachtrace ReachesAlignedtoStart ReachesAlignedtoStop]
     hold on;plot(data(~isnan(data(:,2)),2)*25)%add in event marker (EM)
