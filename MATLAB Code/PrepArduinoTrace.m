@@ -40,8 +40,8 @@ ind = zeros(size(Trace)); badStarts = [];
 med = nanmedian(Trace)*5; %scaled to be greater than noise
 medTH = nanmedian(Trace)*20; %scaled to be greater than noise but less than reach peaks
 if med == 0 % if median value is 0 need to find median of non zero trace
-    med = nanmedian(trace(trace~=0))*5;
-    medTH = nanmedian(trace(trace~=0))*20;
+    med = nanmedian(Trace(Trace~=0))*5;
+    medTH = nanmedian(Trace(Trace~=0))*20;
 end
     
 
