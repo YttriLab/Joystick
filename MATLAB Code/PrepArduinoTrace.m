@@ -19,7 +19,7 @@ function [trace, badStarts, ind] = PrepArduinoTrace(UndecimatedEMTrace,per,windT
 % MAN
 %%
 extraplott = 0; %plots all baseline issues
-plott = 1; %plots summary figure
+plott = 0; %plots summary figure
 %%
 trace = UndecimatedEMTrace(:,3);
 
@@ -31,7 +31,7 @@ end
 
 % add buffer before if starting with a reach
 first = find(~isnan(UndecimatedEMTrace(:,2)),1);
-if UndecimatedEMTrace(first,2)~=0
+if UndecimatedEMTrace(first,2)~=0 || UndecimatedEMTrace(first,3)> nanmedian(trace)*5
     UndecimatedEMTrace(first-200:first-1,2:3) = [zeros(200,1) repmat(nanmedian(trace),200,1)];
     trace = UndecimatedEMTrace(:,3);
 end
