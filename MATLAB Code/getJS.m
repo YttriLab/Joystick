@@ -14,7 +14,7 @@ function [out] = getJS(filepth)
 
 
 % MAN
-
+ 
 [~, file, ~] = fileparts(filepth);
 fid = fopen(filepth, 'r');
 X = fread(fid); fclose(fid);

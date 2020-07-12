@@ -31,7 +31,7 @@ function [nd] = unDecimate(data, columnsWanted)
 % toc
 
 
-%071318 - MAN
+%071318 - MAN 
 %%
 
 % dbstop if error

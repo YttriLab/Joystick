@@ -6,7 +6,7 @@
 % A variable argument of “mm/dd/yy hh:mm:ss” can be added to use the given time and date to name the file. 
 % The file is deleted following copying.
 %
-% MAN
+% MAN 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [] = SavemicroSDData(MouseName,varargin)
@@ -15,16 +15,17 @@ function [] = SavemicroSDData(MouseName,varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %set directory paths where you want the data to be saved
-DirNames = {'Refurb', 'NDrive'};
+DirNames = {'Refurb', 'NDrive', 'MDrive'};
 Directory = 'C:\Users\Yttri Lab\Documents\MATLAB\DATA'; %local
-NDirectory = 'N:\yttri-lab\Data Transfer\241_SDData'; %server
+NDirectory = 'N:\yttri-lab\Data Storage\241_SDData'; %server
+MDirectory = 'M:\yttri-lab\Data Transfer\241_SDData'; %server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UPDATE ABOVE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-locs = {Directory NDirectory};
+locs = {Directory NDirectory MDirectory}; % include Directory names from above here
 
 SDdata = 'E:\'; %set this to match your drive for the SD card reader
 

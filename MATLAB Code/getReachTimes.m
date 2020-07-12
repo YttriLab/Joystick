@@ -19,7 +19,7 @@ function [ reachStart, reachStop, reach0, pos1, pos2] = getReachTimes( InData, N
 %     InData(1:i,:)
 %     InData(i:end,:)
 %
-%     InData(i,1):InData(i+1,1)
+%     InData(i,1):InData(i+1,1) 
 
 % InData = InData(find(isnan(InData(:,2)),1,'last')+1:end,:);
 [a,~] = bwlabel(isnan(InData(:,2)));
