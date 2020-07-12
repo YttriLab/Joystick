@@ -16,10 +16,10 @@ function [Trace, badStarts, ind] = PrepArduinoTrace(UndecimatedEMTrace,per,windT
 % BadStarts - time at which baseline issue was identified and fixed
 % ind - index of time when trace was altered
 %
-% MAN
+% MAN 
 %%
 extraplott = 0; %plots all baseline issues
-plott = 0; %plots summary figure
+plott = 1; %plots summary figure
 %%
 Trace = UndecimatedEMTrace(:,3);
 
