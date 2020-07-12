@@ -4,6 +4,7 @@ This sketch can be used to drain reservoir and flush/clean lines and solenoid
 Opens solenoid for 100 seconds and closes it for 1 second continuously
 
 To clean lines/solenoid run 10% bleach through then flush with clean water a few times
+MAN
 */
 int solenoid = 13;
 

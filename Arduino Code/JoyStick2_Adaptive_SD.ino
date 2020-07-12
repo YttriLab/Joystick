@@ -2,7 +2,7 @@
   Increases threshold by one if 5 reaches occur with no more than 2 minutes between any reach
   If no reaches in 3 minutes, threshold drops by 3 and can no longer increase
   MAN
-*/
+*/ 
 
 
 #define LR_pin A0 //anolog pin for X
