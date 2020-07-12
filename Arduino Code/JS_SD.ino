@@ -9,6 +9,7 @@
  * micro SD card should have only one file titled "Log.txt"
  * after collecting data run SavemicroSDData.m on MATLAB
  * 
+ * MAN
  */
  
 #define LR_pin A0 //anolog pin for X

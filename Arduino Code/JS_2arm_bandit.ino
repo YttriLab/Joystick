@@ -1,3 +1,5 @@
+//MAN
+
 #define LR_pin A1 //anolog pin for X
 #define UD_pin A0 //anolog pin for Y
 #define R A10 // rng seed
