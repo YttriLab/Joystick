@@ -54,8 +54,6 @@ void setup() {
 
   lcd.backlight();
   lcd.begin();
-
-
 }
 
 //strings to int
