@@ -3,7 +3,7 @@
    Move joystick past threshold in response to cue light to turn off light and receive water, a random ITI will follow
    movements in the last 20% of ITI result in time out with house lights
    
-   MAN
+   MAN 
 */
 #define LR_pin A0 //anolog pin for X
 #define UD_pin A1 //anolog pin for Y
